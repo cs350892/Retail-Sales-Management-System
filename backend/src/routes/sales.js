@@ -4,8 +4,20 @@ const Sale = require('../models/Sale');
 
 router.get('/', async (req, res) => {
   try {
-    const sales = await Sale.find().limit(100);
-    res.json({ count: sales.length, data: sales });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const total = await Sale.countDocuments();
+    const sales = await Sale.find().skip(skip).limit(limit);
+    const totalPages = Math.ceil(total / limit);
+
+    res.json({
+      data: sales,
+      total,
+      page,
+      totalPages
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
