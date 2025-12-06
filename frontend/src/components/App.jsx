@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
-import './App.css'
+import '../styles/App.css'
+import { fetchSales } from '../services/api'
 
 function App() {
   const [sales, setSales] = useState([])
   const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
 
-  useEffect(() => {
-    fetch('http://localhost:5000/api/sales?page=1&limit=10')
-      .then(response => response.json())
+  const fetchSalesData = (searchTerm = '', pageNum = 1) => {
+    setLoading(true)
+    fetchSales(searchTerm, pageNum, 10)
       .then(data => {
         setSales(data.data)
         setLoading(false)
@@ -16,7 +19,17 @@ function App() {
         console.error('Error fetching sales:', error)
         setLoading(false)
       })
+  }
+
+  useEffect(() => {
+    fetchSales()
   }, [])
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    setPage(1)
+    fetchSales(search, 1)
+  }
 
   return (
     <div className="app">
@@ -40,6 +53,20 @@ function App() {
         </header>
         <main className="content">
           <h2>Sales Data</h2>
+          <form className="search-form" onSubmit={handleSearch}>
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="Name, Phone no.."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="search-input"
+              />
+              <button type="submit" className="search-button">
+                🔍
+              </button>
+            </div>
+          </form>
           {loading ? (
             <p>Loading sales data...</p>
           ) : (
