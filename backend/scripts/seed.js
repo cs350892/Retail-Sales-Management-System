@@ -20,10 +20,11 @@ async function seedDatabase() {
     }
 
     const salesData = [];
+    const BATCH_SIZE = 1000;
 
     fs.createReadStream(CSV_FILE_PATH)
       .pipe(csv())
-      .on('data', (row) => {
+      .on('data', async (row) => {
         const saleRecord = {
           CustomerID: row['Customer ID'],
           CustomerName: row['Customer Name'],
@@ -53,14 +54,19 @@ async function seedDatabase() {
         };
 
         salesData.push(saleRecord);
+
+        if (salesData.length >= BATCH_SIZE) {
+          await Sale.insertMany(salesData);
+          console.log(`Inserted ${BATCH_SIZE} records`);
+          salesData.length = 0; // Clear the array
+        }
       })
       .on('end', async () => {
         if (salesData.length > 0) {
           await Sale.insertMany(salesData);
-          console.log(`Successfully imported ${salesData.length} sales records`);
-        } else {
-          console.log('No data to import');
+          console.log(`Inserted remaining ${salesData.length} records`);
         }
+        console.log('CSV processing complete');
         await mongoose.connection.close();
         console.log('Database connection closed');
       })

@@ -1,8 +1,90 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 240px;
+  height: 100vh;
+  background-color: #1e293b;
+  color: #ffffff;
+  overflow-y: auto;
+}
+
+.sidebar-content {
+  padding: 20px;
+}
+
+.sidebar h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.sidebar nav ul {
+  list-style: none;
+}
+
+.sidebar nav li {
+  margin-bottom: 10px;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 10px 12px;
+  color: #cbd5e1;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.sidebar nav a:hover {
+  background-color: #334155;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.main-container {
+  margin-left: 240px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.topbar {
+  background-color: #16a34a;
+  color: #ffffff;
+  padding: 16px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.topbar h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+  background-color: #ffffff;
+  overflow-y: auto;
+}
+
+.content h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: #1e293b;
+}
+
+.content p {
+  color: #64748b;
+  line-height: 1.6;
 }
 
 .logo {
