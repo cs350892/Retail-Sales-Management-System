@@ -7,9 +7,20 @@ router.get('/', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const search = req.query.search || '';
 
-    const total = await Sale.countDocuments();
-    const sales = await Sale.find().skip(skip).limit(limit);
+    let query = {};
+    if (search) {
+      query = {
+        $or: [
+          { CustomerName: { $regex: search, $options: 'i' } },
+          { Phone: { $regex: search, $options: 'i' } }
+        ]
+      };
+    }
+
+    const total = await Sale.countDocuments(query);
+    const sales = await Sale.find(query).skip(skip).limit(limit);
     const totalPages = Math.ceil(total / limit);
 
     res.json({
