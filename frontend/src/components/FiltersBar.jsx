@@ -1,4 +1,4 @@
-export default function FiltersBar({ options, value, onChange }) {
+export default function FiltersBar({ options, value, onChange, sortValue, onSortChange }) {
   const handle = (key) => (e) => onChange({ ...value, [key]: e.target.value })
 
   return (
@@ -10,6 +10,7 @@ export default function FiltersBar({ options, value, onChange }) {
       <Select label="Tags" opts={options.Tags} val={value.Tags} onChange={handle('Tags')} />
       <Select label="Payment" opts={options.PaymentMethod} val={value.PaymentMethod} onChange={handle('PaymentMethod')} />
       <Select label="Date" opts={options.Date} val={value.Date} onChange={handle('Date')} />
+      <SortSelect label="Sort by" val={sortValue} onChange={onSortChange} />
     </div>
   )
 }
@@ -31,10 +32,25 @@ function Select({ label, opts = [], val = '', onChange }) {
   )
 }
 
+function SortSelect({ label, val = 'name-asc', onChange }) {
+  return (
+    <label style={styles.item}>
+      <span style={styles.label}>{label}</span>
+      <div style={styles.selectWrap}>
+        <select value={val} onChange={(e) => onChange(e.target.value)} style={styles.select}>
+          <option value="name-asc">Customer Name (A-Z)</option>
+          <option value="name-desc">Customer Name (Z-A)</option>
+        </select>
+        <span style={styles.arrow}>▾</span>
+      </div>
+    </label>
+  )
+}
+
 const styles = {
   row: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(7, minmax(140px, 1fr))',
+    gridTemplateColumns: 'repeat(8, minmax(140px, 1fr))',
     gap: '8px',
     alignItems: 'center',
     margin: '6px 0 12px'

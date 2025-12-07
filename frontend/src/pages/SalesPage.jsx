@@ -18,6 +18,7 @@ function SalesPage() {
   const [filters, setFilters] = useState({
     Region: '', Gender: '', AgeRange: '', Category: '', Tags: '', PaymentMethod: '', Date: ''
   })
+  const [sortBy, setSortBy] = useState('name-asc')
 
   const fetchSalesData = (searchTerm = '', pageNum = 1) => {
     console.log('Fetching sales data with searchTerm:', searchTerm, 'pageNum:', pageNum);
@@ -64,9 +65,15 @@ function SalesPage() {
             <Loader />
           ) : (
             <>
-              <FiltersBar options={buildOptions(sales)} value={filters} onChange={setFilters} />
-              <SummaryCards sales={applyFilters(sales, filters)} />
-              <SalesTable sales={applyFilters(sales, filters)} />
+              <FiltersBar
+                options={buildOptions(sales)}
+                value={filters}
+                onChange={setFilters}
+                sortValue={sortBy}
+                onSortChange={setSortBy}
+              />
+              <SummaryCards sales={applySort(applyFilters(sales, filters), sortBy)} />
+              <SalesTable sales={applySort(applyFilters(sales, filters), sortBy)} />
               <Pagination
                 page={page}
                 totalPages={totalPages}
@@ -124,6 +131,16 @@ function applyFilters(sales, f) {
     same(s.PaymentMethod, f.PaymentMethod) &&
     same(dateKey(s.Date), f.Date)
   )
+}
+
+function applySort(sales, sortBy) {
+  const arr = [...sales]
+  if (sortBy === 'name-asc') {
+    arr.sort((a, b) => String(a.CustomerName).localeCompare(String(b.CustomerName)))
+  } else if (sortBy === 'name-desc') {
+    arr.sort((a, b) => String(b.CustomerName).localeCompare(String(a.CustomerName)))
+  }
+  return arr
 }
 
 function formatDateKey(d) {
