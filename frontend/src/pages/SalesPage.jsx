@@ -21,17 +21,35 @@ function SalesPage() {
   const [sortBy, setSortBy] = useState('name-asc')
 
   const fetchSalesData = (searchTerm = '', pageNum = 1) => {
-    console.log('Fetching sales data with searchTerm:', searchTerm, 'pageNum:', pageNum);
+    console.log('Fetching sales data with searchTerm:', searchTerm, 'pageNum:', pageNum)
     setLoading(true)
-    fetchSales(searchTerm, pageNum, 10)
-      .then(data => {
-        console.log('Data received:', data);
-        setSales(data.data)
-        setTotalPages(data.totalPages)
+    // Map current UI filters to backend query params
+    const toArray = (v) => (v ? [v] : [])
+    fetchSales({
+      search: searchTerm,
+      page: pageNum,
+      limit: 10,
+      regions: toArray(filters.Region),
+      genders: toArray(filters.Gender),
+      categories: toArray(filters.Category),
+      tags: toArray(filters.Tags),
+      payments: toArray(filters.PaymentMethod),
+      // Age range UI is currently a preset; keep empty until number inputs are added
+      ageMin: '',
+      ageMax: '',
+      dateFrom: '',
+      dateTo: '',
+      // Use sort mapped to backend options
+      sort: sortBy === 'name-asc' ? 'name-asc' : sortBy === 'name-desc' ? 'name-desc' : 'date-desc'
+    })
+      .then((data) => {
+        console.log('Data received:', data)
+        setSales(data.data || [])
+        setTotalPages(data.totalPages || 1)
         setLoading(false)
-        console.log('Sales set to:', data.data.length, 'items');
+        console.log('Sales set to:', (data.data || []).length, 'items')
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error in fetchSalesData:', error)
         setLoading(false)
       })
