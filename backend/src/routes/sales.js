@@ -4,6 +4,7 @@ const Sale = require('../models/Sale');
 
 router.get('/', async (req, res) => {
   try {
+    console.log('Sales API called with query:', req.query);
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
@@ -18,17 +19,22 @@ router.get('/', async (req, res) => {
         ]
       };
     }
+    console.log('MongoDB query:', query);
 
     const total = await Sale.countDocuments(query);
+    console.log('Total documents:', total);
     const sales = await Sale.find(query).skip(skip).limit(limit);
+    console.log('Sales fetched:', sales.length, 'records');
     const totalPages = Math.ceil(total / limit);
 
-    res.json({
+    const response = {
       data: sales,
       total,
       page,
       totalPages
-    });
+    };
+    console.log('Sending response:', { total, page, totalPages, dataLength: sales.length });
+    res.json(response);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

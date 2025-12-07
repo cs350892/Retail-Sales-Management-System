@@ -20,7 +20,7 @@ async function seedDatabase() {
     }
 
     const salesData = [];
-    const BATCH_SIZE = 1000;
+    const BATCH_SIZE = 100;
 
     fs.createReadStream(CSV_FILE_PATH)
       .pipe(csv())
@@ -53,22 +53,12 @@ async function seedDatabase() {
           EmployeeName: row['Employee Name']
         };
 
-        salesData.push(saleRecord);
-
-        if (salesData.length >= BATCH_SIZE) {
-          await Sale.insertMany(salesData);
-          console.log(`Inserted ${BATCH_SIZE} records`);
-          salesData.length = 0; // Clear the array
+        try {
+          await Sale.create(saleRecord);
+          console.log('Inserted one record');
+        } catch (error) {
+          console.error('Error inserting record:', error);
         }
-      })
-      .on('end', async () => {
-        if (salesData.length > 0) {
-          await Sale.insertMany(salesData);
-          console.log(`Inserted remaining ${salesData.length} records`);
-        }
-        console.log('CSV processing complete');
-        await mongoose.connection.close();
-        console.log('Database connection closed');
       })
       .on('error', (error) => {
         console.error('Error reading CSV:', error);
