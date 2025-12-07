@@ -18,20 +18,20 @@ export default function SummaryCards({ sales }) {
 
   return (
     <div style={styles.wrapper}>
-      <Card color="#16a34a" icon="📦" label="Total Units" value={totals.units.toLocaleString()} />
-      <Card color="#16a34a" icon="💰" label="Total Amount" value={formatCurrency(totals.amount)} />
-      <Card color="#16a34a" icon="🏷️" label="Total Discount" value={formatCurrency(totals.discount)} />
+      <Card className="summary-card" color="#16a34a" icon="📦" label="Total Units" value={totals.units.toLocaleString()} />
+      <Card className="summary-card" color="#16a34a" icon="💰" label="Total Amount" value={formatCurrency(totals.amount)} />
+      <Card className="summary-card" color="#16a34a" icon="🏷️" label="Total Discount" value={formatCurrency(totals.discount)} />
     </div>
   )
 }
 
-function Card({ color, icon, label, value }) {
+function Card({ className, color, icon, label, value }) {
   return (
-    <div style={{ ...styles.card, borderColor: color }}>
+    <div className={className} style={{ ...styles.card, borderColor: color, background: color }}>
       <div style={styles.icon}>{icon}</div>
       <div style={styles.content}>
-        <div style={styles.label}>{label}</div>
-        <div style={styles.value}>{value}</div>
+        <div style={{ ...styles.label, color: '#ffffff' }}>{label}</div>
+        <div style={{ ...styles.value, color: '#ffffff' }}>{value}</div>
       </div>
     </div>
   )
@@ -50,8 +50,6 @@ const styles = {
     padding: '12px 14px',
     borderRadius: '10px',
     border: '2px solid',
-    background:
-      'linear-gradient(135deg, rgba(22,163,74,0.12), rgba(22,163,74,0.06))',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)'
   },
   icon: {

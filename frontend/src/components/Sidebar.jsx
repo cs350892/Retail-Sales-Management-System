@@ -1,15 +1,16 @@
-function Sidebar() {
+function Sidebar({ active = 'Sales' }) {
+  const items = ['Dashboard', 'Sales', 'Customers', 'Products', 'Reports']
   return (
     <aside className="sidebar">
       <div className="sidebar-content">
         <h2>Menu</h2>
         <nav>
           <ul>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#" className="active">Sales</a></li>
-            <li><a href="#">Products</a></li>
-            <li><a href="#">Customers</a></li>
-            <li><a href="#">Reports</a></li>
+            {items.map((label) => (
+              <li key={label}>
+                <a href="#" className={label === active ? 'active' : ''}>{label}</a>
+              </li>
+            ))}
           </ul>
         </nav>
       </div>

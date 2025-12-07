@@ -55,7 +55,7 @@ function SalesPage() {
 
   return (
     <div className="app">
-      <Sidebar />
+      <Sidebar active="Sales" />
       <div className="main-container">
         <Topbar />
         <main className="content">

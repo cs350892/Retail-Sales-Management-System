@@ -2,7 +2,7 @@ export default function FiltersBar({ options, value, onChange, sortValue, onSort
   const handle = (key) => (e) => onChange({ ...value, [key]: e.target.value })
 
   return (
-    <div style={styles.row}>
+    <div className="filters-row" style={styles.row}>
       <Select label="Region" opts={options.Region} val={value.Region} onChange={handle('Region')} />
       <Select label="Gender" opts={options.Gender} val={value.Gender} onChange={handle('Gender')} />
       <Select label="Age Range" opts={options.AgeRange} val={value.AgeRange} onChange={handle('AgeRange')} />

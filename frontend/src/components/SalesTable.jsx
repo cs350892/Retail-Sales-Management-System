@@ -4,19 +4,19 @@ function SalesTable({ sales }) {
       <table className="sales-table">
         <thead>
           <tr>
-            <th>Transaction ID</th>
-            <th>Date</th>
-            <th>Customer ID</th>
-            <th>Customer Name</th>
-            <th>Phone Number</th>
-            <th>Gender</th>
-            <th>Age</th>
-            <th>Product Category</th>
-            <th>Quantity</th>
-            <th>Total Amount</th>
-            <th>Customer Region</th>
-            <th>Product ID</th>
-            <th>Employee Name</th>
+            <th style={{width:'130px'}}>Transaction ID</th>
+            <th style={{width:'100px'}}>Date</th>
+            <th style={{width:'110px'}}>Customer ID</th>
+            <th style={{width:'160px'}}>Customer Name</th>
+            <th style={{width:'130px'}}>Phone Number</th>
+            <th style={{width:'90px'}}>Gender</th>
+            <th style={{width:'70px'}}>Age</th>
+            <th style={{width:'150px'}}>Product Category</th>
+            <th style={{width:'90px'}}>Quantity</th>
+            <th style={{width:'120px'}}>Total Amount</th>
+            <th style={{width:'140px'}}>Customer Region</th>
+            <th style={{width:'110px'}}>Product ID</th>
+            <th style={{width:'160px'}}>Employee Name</th>
           </tr>
         </thead>
         <tbody>
