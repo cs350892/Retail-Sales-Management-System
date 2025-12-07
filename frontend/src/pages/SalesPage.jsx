@@ -6,6 +6,7 @@ import SalesTable from '../components/SalesTable'
 import Pagination from '../components/Pagination'
 import Loader from '../components/Loader'
 import { fetchSales } from '../services/api'
+import SummaryCards from '../components/SummaryCards'
 
 function SalesPage() {
   const [sales, setSales] = useState([])
@@ -15,15 +16,18 @@ function SalesPage() {
   const [totalPages, setTotalPages] = useState(1)
 
   const fetchSalesData = (searchTerm = '', pageNum = 1) => {
+    console.log('Fetching sales data with searchTerm:', searchTerm, 'pageNum:', pageNum);
     setLoading(true)
     fetchSales(searchTerm, pageNum, 10)
       .then(data => {
+        console.log('Data received:', data);
         setSales(data.data)
         setTotalPages(data.totalPages)
         setLoading(false)
+        console.log('Sales set to:', data.data.length, 'items');
       })
       .catch(error => {
-        console.error('Error fetching sales:', error)
+        console.error('Error in fetchSalesData:', error)
         setLoading(false)
       })
   }
@@ -56,6 +60,7 @@ function SalesPage() {
             <Loader />
           ) : (
             <>
+              <SummaryCards sales={sales} />
               <SalesTable sales={sales} />
               <Pagination
                 page={page}
