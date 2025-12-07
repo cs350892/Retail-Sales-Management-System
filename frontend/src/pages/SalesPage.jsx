@@ -7,6 +7,7 @@ import Pagination from '../components/Pagination'
 import Loader from '../components/Loader'
 import { fetchSales } from '../services/api'
 import SummaryCards from '../components/SummaryCards'
+import FiltersBar from '../components/FiltersBar'
 
 function SalesPage() {
   const [sales, setSales] = useState([])
@@ -14,6 +15,9 @@ function SalesPage() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [filters, setFilters] = useState({
+    Region: '', Gender: '', AgeRange: '', Category: '', Tags: '', PaymentMethod: '', Date: ''
+  })
 
   const fetchSalesData = (searchTerm = '', pageNum = 1) => {
     console.log('Fetching sales data with searchTerm:', searchTerm, 'pageNum:', pageNum);
@@ -60,8 +64,9 @@ function SalesPage() {
             <Loader />
           ) : (
             <>
-              <SummaryCards sales={sales} />
-              <SalesTable sales={sales} />
+              <FiltersBar options={buildOptions(sales)} value={filters} onChange={setFilters} />
+              <SummaryCards sales={applyFilters(sales, filters)} />
+              <SalesTable sales={applyFilters(sales, filters)} />
               <Pagination
                 page={page}
                 totalPages={totalPages}
@@ -76,3 +81,54 @@ function SalesPage() {
 }
 
 export default SalesPage
+
+// Helpers to build options and filter client-side
+function buildOptions(sales) {
+  const uniq = (arr) => Array.from(new Set(arr.filter(Boolean))).sort()
+  const regions = uniq(sales.map(s => s.Region))
+  const genders = uniq(sales.map(s => s.Gender))
+  const categories = uniq(sales.map(s => s.Category))
+  const tags = uniq(sales.flatMap(s => Array.isArray(s.Tags) ? s.Tags : []))
+  const payment = uniq(sales.map(s => s.PaymentMethod))
+  const dates = uniq(sales.map(s => formatDateKey(s.Date)))
+
+  const ageRanges = ['0-17','18-25','26-35','36-45','46-60','61+']
+
+  return {
+    Region: regions,
+    Gender: genders,
+    AgeRange: ageRanges,
+    Category: categories,
+    Tags: tags,
+    PaymentMethod: payment,
+    Date: dates
+  }
+}
+
+function applyFilters(sales, f) {
+  const inRange = (age, range) => {
+    if (!range) return true
+    if (range === '61+') return age >= 61
+    const [min, max] = range.split('-').map(Number)
+    return age >= min && age <= max
+  }
+  const same = (val, selected) => !selected || String(val) === String(selected)
+  const dateKey = (d) => formatDateKey(d)
+
+  return sales.filter(s =>
+    same(s.Region, f.Region) &&
+    same(s.Gender, f.Gender) &&
+    inRange(Number(s.Age), f.AgeRange) &&
+    same(s.Category, f.Category) &&
+    (!f.Tags || (Array.isArray(s.Tags) && s.Tags.includes(f.Tags))) &&
+    same(s.PaymentMethod, f.PaymentMethod) &&
+    same(dateKey(s.Date), f.Date)
+  )
+}
+
+function formatDateKey(d) {
+  const date = new Date(d)
+  if (isNaN(date.getTime())) return ''
+  // Use YYYY-MM for month grouping
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`
+}
