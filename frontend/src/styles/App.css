@@ -20,7 +20,7 @@
 }
 
   .content-inner {
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
   }
 .sidebar h2 {
@@ -38,10 +38,17 @@
   margin-bottom: 10px;
 }
 
+  @media (max-width: 1280px) {
+    .content-inner {
+      max-width: 1200px;
+      padding: 0 8px;
+    }
+  }
+
   @media (max-width: 1024px) {
     .content-inner {
-      max-width: 980px;
-      padding: 0 4px;
+      max-width: 960px;
+      padding: 0 8px;
     }
   }
 
