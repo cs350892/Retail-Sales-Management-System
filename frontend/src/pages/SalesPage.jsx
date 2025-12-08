@@ -77,6 +77,7 @@ function SalesPage() {
       <div className="main-container">
         <Topbar />
         <main className="content">
+          <div className="content-inner">
           <h2>Sales Data</h2>
           <SearchBar onSearch={handleSearch} />
           {loading ? (
@@ -99,6 +100,7 @@ function SalesPage() {
               />
             </>
           )}
+          </div>
         </main>
       </div>
     </div>
