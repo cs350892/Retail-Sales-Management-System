@@ -1,7 +1,8 @@
 .app {
   display: flex;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: auto; /* allow horizontal scroll when needed */
+  overflow-y: hidden;
 }
 
 .sidebar {
@@ -175,7 +176,8 @@
 }
 
 .table-container {
-  overflow-x: auto;
+  overflow-x: auto; /* horizontal scroll for wide tables */
+  overflow-y: hidden;
   margin-top: 20px;
 }
 
